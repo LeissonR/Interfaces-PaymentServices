@@ -6,17 +6,27 @@ import model.entities.Contract;
 import model.entities.Installment;
 
 public class ContractService {
-	
-	private  OnlinePaymentService onlinePaymentService;
-	
+
+	private OnlinePaymentService onlinePaymentService;
+
 	public ContractService(OnlinePaymentService onlinePaymentService) {
-	this.onlinePaymentService = onlinePaymentService;
-	}
-	
-	public void processContract(Contract contract, Integer months) {
-		
-		contract.getInstallments().add(new Installment(LocalDate.of(2018, 7, 25), 206.04));
-		contract.getInstallments().add(new Installment(LocalDate.of(2018, 8, 25), 208.08));
+		this.onlinePaymentService = onlinePaymentService;
 	}
 
+	public void processContract(Contract contract, Integer months) {
+
+		double basicQuota = contract.getTotalValue() / months;
+
+		for (int i = 1; i <= months; i++) {
+
+			LocalDate dueDate = contract.getDate().plusMonths(i);
+
+			double interest = onlinePaymentService.interest(basicQuota, i);
+			double fee = onlinePaymentService.paymentFee(basicQuota + interest);
+			Double quota = basicQuota + interest + fee;
+
+			contract.getInstallments().add(new Installment(dueDate, quota));
+		}
+
+	}
 }

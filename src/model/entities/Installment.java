@@ -4,13 +4,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Installment {
-	
+
 	private static DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	
+
 	private LocalDate dueDate;
 	private Double amount;
-			
-	Installment(){
+
+	Installment() {
 	}
 
 	public Installment(LocalDate dueDate, Double amount) {
@@ -42,5 +42,5 @@ public class Installment {
 		sb.append(String.format("%.2f", amount));
 		return sb.toString();
 	}
-		
+
 }
